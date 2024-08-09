@@ -1,0 +1,18 @@
+[
+  {
+    "fullname": "fajri Prawira",
+    "age": "29",
+    "phoneNumber": "6281389396859",
+    "address": "BSD",
+    "skill": "Software Engineer ",
+    "UserId": 1
+  },
+  {
+    "fullname": "imam a'syari",
+    "age": "19",
+    "phoneNumber": "6281385756731",
+    "address": "tangerang",
+    "skill": "Cybersecurity Specialist",
+    "UserId": 2
+  }
+]

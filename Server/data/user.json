@@ -1,0 +1,13 @@
+[
+  {
+    "username": "fajri",
+    "email": "admin123@gmail.com",
+    "password": "abcd1234"
+  },
+
+  {
+    "username": "prawira",
+    "email": "staff123@gmail.com",
+    "password": "efgh5678"
+  }
+]
