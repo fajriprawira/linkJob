@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Toastify from "toastify-js";
 import { useNavigate } from "react-router-dom";
-// import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage({ url }) {
   const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ export default function LoginPage({ url }) {
         },
       }).showToast();
       localStorage.setItem("access_token", data.access_token);
-      navigate("/"); // Ganti dengan halaman yang diinginkan setelah login
+      navigate("/profile"); // Ganti dengan halaman yang diinginkan setelah login
     } catch (error) {
       console.log(error);
       Toastify({
@@ -52,24 +52,24 @@ export default function LoginPage({ url }) {
     }
   }
 
-  // async function googleLogin(codeResponse) {
-  //   try {
-  //     console.log(codeResponse);
-  //     const { data } = await axios.post(`${url}//google-login`, null, {
-  //       headers: {
-  //         token: codeResponse.credential,
-  //       },
-  //     });
-  //     localStorage.setItem("access_token", data.access_token);
-  //     navigate("/");
-  //   } catch (error) {
-  //     console.log(error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: error.response.data.message,
-  //     });
-  //   }
-  // }
+  async function googleLogin(codeResponse) {
+    try {
+      console.log(codeResponse);
+      const { data } = await axios.post(`${url}//google-login`, null, {
+        headers: {
+          token: codeResponse.credential,
+        },
+      });
+      localStorage.setItem("access_token", data.access_token);
+      navigate("/profile");
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+      });
+    }
+  }
 
   function emailOnChange(event) {
     setEmail(event.target.value);
@@ -126,8 +126,8 @@ export default function LoginPage({ url }) {
             Sign up
           </a>
         </p>
-        {/* <div className="divider px-10">OR</div>
-        <div className="mt-6 flex justify-center items-center">
+        <div className="divider px-10">OR</div>
+        {/* <div className="mt-6 flex justify-center items-center">
           <GoogleLogin onSuccess={googleLogin} />
         </div> */}
       </div>

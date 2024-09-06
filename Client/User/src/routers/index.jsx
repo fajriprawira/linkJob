@@ -4,7 +4,8 @@ import RegisterPage from "../views/RegisterPage";
 import BaseLayout from "../views/BaseLayout";
 import HomePage from "../views/HomePage";
 // import DetailPage from "../views/DetailPage";
-// import AddJobPage from "../views/AddJobPage";
+import AddJobPage from "../views/AddJobPage";
+import ProfilePage from "../views/ProfilePage";
 import EditProfilePage from "../views/EditProfilePage";
 import Toastify from "toastify-js";
 
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
             fontWeight: "bold",
           },
         }).showToast();
-        return redirect("/");
+        return redirect("/profile");
       }
       return null;
     },
@@ -65,24 +66,26 @@ const router = createBrowserRouter([
       return null;
     },
     children: [
-      {
+        {
         path: "/",
         element: <HomePage url={url} />,
+        
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage url={url} />, // Path ini akan digunakan untuk membuat profil baru
         loader: () => {
           if (!localStorage.access_token) {
-            return redirect("/login");
+            return redirect("/");
           }
           return null;
         },
       },
-      // {
-      //   path: "/detail/:id",
-      //   element: <DetailPage url={url} />,
-      // },
-      // {
-      //   path: "/add-job",
-      //   element: <AddJobPage url={url} />,
-      // },
+
+      {
+        path: "/myjobs",
+        element: <AddJobPage url={url} />,
+      },
       // {
       //   path: "/edit-profile/:id",
       //   element: <EditProfilePage url={url} />,

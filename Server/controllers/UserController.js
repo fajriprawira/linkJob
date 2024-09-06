@@ -1,5 +1,4 @@
-const axios = require("axios");
-const { User, Profile } = require("../models/index");
+const { User } = require("../models/index");
 const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { OAuth2Client } = require("google-auth-library");
@@ -11,7 +10,7 @@ class UserController {
       const user = await User.create({
         username,
         email,
-        password,
+        password, // Tidak perlu hash di sini, sudah dilakukan di model
       });
 
       res.status(201).json({
@@ -26,20 +25,15 @@ class UserController {
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
-      console.log(email, password);
-      if (!email || !password) throw { name: "InvalidLogin" };
+      if (!email || !password) throw { name: "InvalidLogin", message: "Email and password are required" };
 
-      // proses nyari user bedasarkan email
       const user = await User.findOne({
-        where: {
-          email,
-        },
+        where: { email },
       });
 
-      if (!user) throw { name: "LoginError" };
-
-      if (!comparePassword(password, user.password))
-        throw { name: "LoginError" };
+      if (!user || !comparePassword(password, user.password)) {
+        throw { name: "LoginError", message: "Invalid email or password" };
+      }
 
       const payload = {
         id: user.id,
@@ -48,28 +42,9 @@ class UserController {
 
       const access_token = signToken(payload);
 
-      res.status(200).json({
-        access_token,
-      });
+      res.status(200).json({ access_token });
     } catch (error) {
-      // console.log(error)
       next(error);
-      // let message = 'Internal server error'
-      // let status = 500
-
-      // if (error.name === 'InvalidLogin') {
-      //     message = 'Please input email or password'
-      //     status = 401
-      // }
-
-      // if (error.name === 'LoginError') {
-      //     message = 'Invalid email or password'
-      //     status = 401
-      // }
-
-      // res.status(status).json({
-      //     message
-      // })
     }
   }
 
@@ -85,46 +60,21 @@ class UserController {
 
       const payload = ticket.getPayload();
 
-      const [user] = await User.findOrCreate({
-        where: { username: payload.email },
+      const [user, created] = await User.findOrCreate({
+        where: { email: payload.email },
         defaults: {
           username: payload.email,
-          password: "password_google", // Atur password default untuk user baru
+          email: payload.email,
+          password: "password_google", // Tidak perlu hash di sini, karena model akan melakukannya
         },
-        hooks: false,
+        hooks: true, // Pastikan hooks tetap berjalan untuk hashing password default
       });
 
       const access_token = signToken({ id: user.id, username: user.username });
 
       res.status(200).json({ access_token });
     } catch (error) {
-      next(error); // Menangani kesalahan melalui middleware error handler
-    }
-  }
-
-  static async editProfilesById(req, res, next) {
-    try {
-      const { userId } = req.loginInfo;
-      const { fullname, age, phoneNumber, address, skill } = req.body;
-
-      const user = await User.findByPk(id);
-
-      if (!user) {
-        throw { name: "NotFound", message: `User with id ${id} not found` };
-      }
-
-      // Memperbarui profil
-      await Profile.update(
-        { fullname, age, phoneNumber, address, skill },
-        { where: { userId } }
-      );
-
-      res.status(200).json({
-        message: `Success edit user with id ${id}`,
-        user,
-      });
-    } catch (error) {
-      next(error); // Menangani kesalahan melalui middleware error handler
+      next(error);
     }
   }
 }

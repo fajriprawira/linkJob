@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 export default function Nav() {
   const navigate = useNavigate();
 
@@ -11,20 +12,32 @@ export default function Nav() {
   return (
     <>
       {/* Navbar */}
-      <nav className="navbar bg-blue-800 p-4 rounded-lg shadow-lg">
-        <div className="flex-1 flex items-center space-x-4">
-          {/* Logo */}
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            {/* Optional: Add your logo here */}
-            <span className="text-blue-800 font-bold">LJ</span>
-          </div>
-          {/* Title */}
-          <a className="text-xl text-white font-mono">LINKJOB</a>
+      <nav className="bg-purple-500 text-white py-3 px-5 flex justify-between items-center rounded-lg shadow-lg">
+        {/* Logo or Home Link */}
+        <div className="text-xl font-bold">
+          <Link
+            to="/"
+            className="hover:text-gray-300 transition"
+          >
+            LINK JOB
+          </Link>
         </div>
-        <div className="flex-none space-x-4">
+
+        {/* Links */}
+        <div className="flex space-x-6">
+          <Link
+            to="/myjobs"
+            className="bg-white text-purple-500 px-3 py-1 rounded-full hover:bg-purple-700 hover:text-white transition"
+          >
+            MyJobs
+          </Link>
+        </div>
+
+        {/* Logout Button */}
+        <div className="flex items-center">
           <button
             onClick={logout}
-            className="btn btn-ghost text-white font-bold"
+            className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded-full font-bold hover:shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all"
           >
             Logout
           </button>

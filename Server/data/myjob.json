@@ -1,0 +1,27 @@
+[
+  {
+      "nama_perusahaan": "PT Maju Jaya",
+      "jabatan": "Software Engineer",
+      "skill_dibutuhkan": ["JavaScript", "Node.js", "React", "Git"]
+  },
+  {
+      "nama_perusahaan": "CV Berkah Abadi",
+      "jabatan": "Product Manager",
+      "skill_dibutuhkan": ["Product Management", "Agile Methodology", "Leadership", "Communication"]
+  },
+  {
+      "nama_perusahaan": "PT Sinar Terang",
+      "jabatan": "Data Analyst",
+      "skill_dibutuhkan": ["SQL", "Python", "Data Visualization", "Statistics"]
+  },
+  {
+      "nama_perusahaan": "PT Kreatif Inovasi",
+      "jabatan": "UI/UX Designer",
+      "skill_dibutuhkan": ["Wireframing", "Prototyping", "Adobe XD", "User Research"]
+  },
+  {
+      "nama_perusahaan": "PT Teknologi Nusantara",
+      "jabatan": "DevOps Engineer",
+      "skill_dibutuhkan": ["CI/CD", "Docker", "Kubernetes", "Cloud Services"]
+  }
+]

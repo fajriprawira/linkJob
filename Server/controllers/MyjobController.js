@@ -1,46 +1,24 @@
-const { User, MyJob, Profile } = require("../models/index");
-const cloudinary = require("../utils/cloudinary");
+const { MyJob,} = require("../models/index");
+
+
 class MyJobController {
   static async addMyjob(req, res, next) {
     try {
-      const { userId } = req.loginInfo;
-
-      const { name, description } = req.body;
-
+      const { userId: UserId } = req.loginInfo; // Mengambil userId dari loginInfo
+      const { title: name, description } = req.body;
+      // console.log(UserId, name, description)
       const myjob = await MyJob.create({
         name,
         description,
-        userId,
+        UserId,
       });
 
       res.status(201).json({
-        message: "Success create new article",
+        message: "Success create new Job",
         myjob,
       });
     } catch (error) {
       next(error);
-      // console.log(error);
-      // let status = 500;
-      // let message = "Internal Server Error";
-
-      // if (error.name === "SequelizeValidationError") {
-      //   status = 400;
-      //   message = error.errors[0].message;
-      // }
-
-      // if (error.name === "SequelizeDatabaseError") {
-      //   status = 400;
-      //   message = "Invalid input";
-      // }
-
-      // if (error.name === "SequelizeForeignKeyConstraintError") {
-      //   status = 400;
-      //   message = "Invalid input";
-      // }
-
-      // res.status(status).json({
-      //   message,
-      // });
     }
   }
 
@@ -49,125 +27,56 @@ class MyJobController {
       const myjob = await MyJob.findAll();
       res.status(200).json({
         statusCode: 200,
-        message: "Success Read Article",
+        message: "Success Read MyJob",
         data: myjob,
       });
     } catch (error) {
-      console.log(error);
-      
       next(error);
-      // console.log(error);
-      // res.status(500).json({
-      //   message: "Internal Server Error",
-      // });
     }
   }
 
-  static async showMyJobById(req, res, next) {
-    const { id } = req.params;
+  static async showMyJobByUserId(req, res, next) {
     try {
-      const myjob = await MyJob.findOne({
-        where: {
-          id,
-        },
-      });
+      const { userId: UserId } = req.loginInfo; 
+      const myjob = await MyJob.findAll({ where: {UserId } }); // Menggunakan id dari params
 
-      if (!myjob) {
-        throw { name: "NotFound", id };
+      if (myjob.length === 0) {
+        // Periksa apakah ada pekerjaan untuk userId
+        return res
+          .status(404)
+          .json({ message: `No jobs found for user with id ${UserId}` });
       }
 
       res.status(200).json({
         statusCode: 200,
-        message: `Success read article with id ${article.id}`,
+        message: `Success read jobs for user with id ${UserId}`,
         data: myjob,
       });
     } catch (error) {
       next(error);
-      // console.log(error);
-      // let status = 500;
-      // let message = "Internal Server Error";
-
-      // if (error.name == "NotFound") {
-      //   status = 404;
-      //   message = `Data with id ${error.id} not found`;
-      // }
-
-      // res.status(status).json({
-      //   message,
-      // });
     }
   }
 
-  static async deleteMyJobById(req, res, next) {
+  static async deleteMyJobByUserId(req, res, next) {
     try {
       const { id } = req.params;
 
       const myjob = await MyJob.findByPk(id);
 
       if (!myjob) {
-        throw { name: "NotFound", id };
+        return res.status(404).json({ message: `Job with id ${id} not found` });
       }
 
-      await MyJob.destroy({
-        where: {
-          id,
-        },
-      });
+      await MyJob.destroy({ where: { id } });
 
       res.status(200).json({
-        message: `Success delete article with id ${id}`,
+        message: `Success delete job with id ${id}`,
       });
     } catch (error) {
       next(error);
-      // console.log(error);
-      // let status = 500;
-      // let message = "Internal Server Error";
-
-      // if (error.name == "NotFound") {
-      //   status = 404;
-      //   message = `Data with id ${error.id} not found`;
-      // }
-
-      // res.status(status).json({
-      //   message,
-      // });
     }
   }
 
-  static async uploadImg(req, res, next) {
-    const id = req.params.id;
-    try {
-      // Pastikan file diunggah
-      if (!req.file) {
-        throw { name: "FileNotFound", message: "No file uploaded" };
-      }
-
-      // Konversi file buffer ke base64
-      const file = req.file.buffer.toString("base64");
-
-      // Mengupload file ke Cloudinary
-      const result = await cloudinary.uploader.upload(
-        `data:image/png;base64,${file}`,
-        {
-          folder: "profile_images", // Menyimpan gambar di folder 'profile_images' di Cloudinary
-        }
-      );
-
-      // Memperbarui URL gambar di database
-      await Profile.update({ imgUrl: result.secure_url }, { where: { id } });
-
-      res
-        .status(200)
-        .json({
-          msg: `Image updated successfully for profile with id ${id}`,
-          url: result.secure_url,
-        });
-    } catch (error) {
-      // Menangani berbagai jenis kesalahan
-      
-      next(error);
-    }
-  }
 }
 
 module.exports = MyJobController;
