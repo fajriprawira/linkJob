@@ -34,7 +34,7 @@ Request:
 _Response (201 - Created)_
 
 ```json
-Salin kode
+
 {
   "id": "integer",
   "username": "string",

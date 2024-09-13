@@ -31,9 +31,11 @@ class UserController {
         where: { email },
       });
 
+      // console.log(comparePassword)
       if (!user || !comparePassword(password, user.password)) {
         throw { name: "LoginError", message: "Invalid email or password" };
       }
+      
 
       const payload = {
         id: user.id,
@@ -42,7 +44,7 @@ class UserController {
 
       const access_token = signToken(payload);
 
-      res.status(200).json({ access_token });
+      res.status(200).json({ access_token, username: user.username });
     } catch (error) {
       next(error);
     }

@@ -23,7 +23,7 @@ export default function LoginPage({ url }) {
         gravity: "top",
         position: "right",
         stopOnFocus: true,
-        style: {
+        style: {  
           background: "#00B29F",
           color: "#17202A",
           boxShadow: "0 5px 10px black",
@@ -31,6 +31,7 @@ export default function LoginPage({ url }) {
         },
       }).showToast();
       localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("username", data.username)
       navigate("/profile"); // Ganti dengan halaman yang diinginkan setelah login
     } catch (error) {
       console.log(error);
@@ -55,11 +56,15 @@ export default function LoginPage({ url }) {
   async function googleLogin(codeResponse) {
     try {
       console.log(codeResponse);
-      const { data } = await axios.post(`${url}//google-login`, null, {
-        headers: {
-          token: codeResponse.credential,
-        },
-      });
+      const { data } = await axios.post(
+        `${url}/google-login`,
+        {},
+        {
+          headers: {
+            token: codeResponse.credential,
+          },
+        }
+      );
       localStorage.setItem("access_token", data.access_token);
       navigate("/profile");
     } catch (error) {
@@ -127,9 +132,9 @@ export default function LoginPage({ url }) {
           </a>
         </p>
         <div className="divider px-10">OR</div>
-        {/* <div className="mt-6 flex justify-center items-center">
+        <div className="mt-6 flex justify-center items-center">
           <GoogleLogin onSuccess={googleLogin} />
-        </div> */}
+        </div>
       </div>
     </div>
   );

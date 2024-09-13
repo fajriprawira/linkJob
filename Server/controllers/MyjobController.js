@@ -1,4 +1,4 @@
-const { MyJob,} = require("../models/index");
+const { MyJob} = require("../models/index");
 
 
 class MyJobController {

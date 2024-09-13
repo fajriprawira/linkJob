@@ -35,6 +35,7 @@ export default function Nav() {
 
         {/* Logout Button */}
         <div className="flex items-center">
+          <p>{localStorage.username}</p>
           <button
             onClick={logout}
             className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded-full font-bold hover:shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all"

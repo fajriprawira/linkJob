@@ -96,6 +96,7 @@ const AddJobPage = ({url}) => {
           </tbody>
         </table>
       )}
+      <input:fie></input:fie>
     </section>
   );
 };

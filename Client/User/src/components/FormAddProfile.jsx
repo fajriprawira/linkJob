@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAsync } from "../features/profile/profileSlice";
 
-export default function ProfilePage({ url }) {
+export default function createProofileForm({ url }) {
   const [fullname, setFullName] = useState("");
   const [age, setAge] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
